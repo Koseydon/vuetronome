@@ -5,3 +5,5 @@ Simple metronome with vuetify components
 - Metronome component created
 # V .02
 - Sound function added and working
+# V .03
+- Sound slider, labels and icons added.

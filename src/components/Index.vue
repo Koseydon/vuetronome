@@ -24,17 +24,27 @@
           </v-btn>
         </v-col>
       </v-row>
-
-      <v-slider v-model="metronome.bpm" :color="color" track-color="grey" always-dirty min="40" max="218">
+      <v-slider v-model="metronome.bpm" :color="color" track-color="grey" always-dirty label="Tempo" min="40" max="218">
         <template v-slot:prepend>
-          <v-icon :color="color" @click="decrement">
+          <v-icon :color="color" @click="bpmDecrement">
             mdi-minus
           </v-icon>
         </template>
-
         <template v-slot:append>
-          <v-icon :color="color" @click="increment">
+          <v-icon :color="color" @click="bpmIncrement">
             mdi-plus
+          </v-icon>
+        </template>
+      </v-slider>
+      <v-slider v-model="metronome.volumeRange" :color="color" track-color="grey" always-dirty label="Volume" min="0" max="100">
+        <template v-slot:prepend>
+          <v-icon :color="color" @click="bpmDecrement">
+            mdi-volume-low
+          </v-icon>
+        </template>
+        <template v-slot:append>
+          <v-icon :color="color" @click="bpmIncrement">
+            mdi-volume-high
           </v-icon>
         </template>
       </v-slider>
@@ -43,13 +53,14 @@
 </template>
 
 <script>
-import beat from '../audio/beat.wav'
+  import beat from '../audio/beat.wav'
 
   export default {
     data: () => ({
-      bpm: 40,
       interval: null,
       metronome: {
+        volumeRange: 100,
+        bpm: 120,
         clickAudio: new Audio(beat),
         timer: null,
         isPlaying: false,
@@ -57,6 +68,7 @@ import beat from '../audio/beat.wav'
           if (this.isPlaying === true) {
             let t1 = performance.now()
             this.clickAudio.play()
+            this.clickAudio.volume = this.volumeRange / 100
             let interval = 60000 / this.bpm
 
             this.timer = setTimeout(() => {
@@ -85,10 +97,16 @@ import beat from '../audio/beat.wav'
     },
 
     methods: {
-      decrement() {
+      volumeDecrement() {
+        this.metronome.volumeRange--
+      },
+      bolumeIncrement() {
+        this.metronome.volumeRange++
+      },
+      bpmDecrement() {
         this.metronome.bpm--
       },
-      increment() {
+      bpmIncrement() {
         this.metronome.bpm++
       },
       toggle() {
