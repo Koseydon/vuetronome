@@ -8,10 +8,10 @@
     <v-card-text>
       <v-row class="mb-4" justify="space-between">
         <v-col class="text-left">
-          <span class="display-3 font-weight-light" v-text="bpm"></span>
+          <span class="display-3 font-weight-light" v-text="metronome.bpm"></span>
           <span class="subheading font-weight-light mr-1">BPM</span>
           <v-fade-transition>
-            <v-avatar v-if="isPlaying" :color="color" :style="{
+            <v-avatar v-if="metronome.isPlaying" :color="color" :style="{
                 animationDuration: animationDuration
               }" class="mb-1 v-avatar--metronome" size="12"></v-avatar>
           </v-fade-transition>
@@ -19,13 +19,13 @@
         <v-col class="text-right">
           <v-btn :color="color" dark depressed fab @click="toggle">
             <v-icon large>
-              {{ isPlaying ? 'mdi-pause' : 'mdi-play' }}
+              {{ metronome.isPlaying ? 'mdi-pause' : 'mdi-play' }}
             </v-icon>
           </v-btn>
         </v-col>
       </v-row>
 
-      <v-slider v-model="bpm" :color="color" track-color="grey" always-dirty min="40" max="218">
+      <v-slider v-model="metronome.bpm" :color="color" track-color="grey" always-dirty min="40" max="218">
         <template v-slot:prepend>
           <v-icon :color="color" @click="decrement">
             mdi-minus
@@ -42,44 +42,59 @@
   </v-card>
 </template>
 
-
 <script>
-  //import metronome from '../components/metronome'
+import beat from '../audio/beat.wav'
 
   export default {
     data: () => ({
       bpm: 40,
       interval: null,
-      isPlaying: false,
-      clickAudio: new Audio('../audio/beat.wav')
+      metronome: {
+        clickAudio: new Audio(beat),
+        timer: null,
+        isPlaying: false,
+        toggle: function () {
+          if (this.isPlaying === true) {
+            let t1 = performance.now()
+            this.clickAudio.play()
+            let interval = 60000 / this.bpm
+
+            this.timer = setTimeout(() => {
+              console.log(performance.now() - t1)
+              this.toggle()
+            }, interval)
+          } else {
+            clearInterval(this.timer)
+            this.timer = null
+          }
+        },
+      }
     }),
 
     computed: {
       color() {
-        if (this.bpm < 100) return 'indigo'
-        if (this.bpm < 125) return 'teal'
-        if (this.bpm < 140) return 'green'
-        if (this.bpm < 175) return 'orange'
+        if (this.metronome.bpm < 100) return 'indigo'
+        if (this.metronome.bpm < 125) return 'teal'
+        if (this.metronome.bpm < 140) return 'green'
+        if (this.metronome.bpm < 175) return 'orange'
         return 'red'
       },
       animationDuration() {
-        return `${60 / this.bpm}s`
+        return `${60 / this.metronome.bpm}s`
       },
     },
 
     methods: {
       decrement() {
-        this.bpm--
+        this.metronome.bpm--
       },
       increment() {
-        this.bpm++
+        this.metronome.bpm++
       },
       toggle() {
-        this.isPlaying = !this.isPlaying
+        this.metronome.isPlaying = !this.metronome.isPlaying
+        this.metronome.toggle()
       },
-      soundOn() {
-        this.clickAudio.play()
-      }
     },
   }
 </script>

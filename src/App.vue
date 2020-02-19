@@ -1,9 +1,7 @@
 <template>
   <v-app>
     <v-content>
-      
       <Index/>
-     
     </v-content>
   </v-app>
 </template>
