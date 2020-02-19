@@ -7,3 +7,5 @@ Simple metronome with vuetify components
 - Sound function added and working
 # V .03
 - Sound slider, labels and icons added.
+# V .04
+- Light/Dark theme button added.

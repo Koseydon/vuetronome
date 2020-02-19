@@ -1,9 +1,15 @@
 <template>
-  <v-card dark class="mx-auto" max-width="600">
+  <v-card  :dark="isDarkTheme" class="mx-auto" max-width="600">
     <v-toolbar flat dense>
       <v-toolbar-title>
         <span class="subheading">VUETRONOME</span>
       </v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn small :dark="isDarkTheme" depressed fab @click="toggleDark">
+        <v-icon small>
+          {{ isDark ? 'mdi-white-balance-sunny' : 'mdi-moon-waning-crescent' }}
+        </v-icon>
+      </v-btn>
     </v-toolbar>
     <v-card-text>
       <v-row class="mb-4" justify="space-between">
@@ -36,7 +42,8 @@
           </v-icon>
         </template>
       </v-slider>
-      <v-slider v-model="metronome.volumeRange" :color="color" track-color="grey" always-dirty label="Volume" min="0" max="100">
+      <v-slider v-model="metronome.volumeRange" :color="color" track-color="grey" always-dirty label="Volume" min="0"
+        max="100">
         <template v-slot:prepend>
           <v-icon :color="color" @click="bpmDecrement">
             mdi-volume-low
@@ -58,6 +65,7 @@
   export default {
     data: () => ({
       interval: null,
+      isDark: false,
       metronome: {
         volumeRange: 100,
         bpm: 120,
@@ -84,6 +92,10 @@
     }),
 
     computed: {
+      isDarkTheme(){
+        if (this.isDark) return true
+        return false
+      },
       color() {
         if (this.metronome.bpm < 100) return 'indigo'
         if (this.metronome.bpm < 125) return 'teal'
@@ -113,6 +125,9 @@
         this.metronome.isPlaying = !this.metronome.isPlaying
         this.metronome.toggle()
       },
+      toggleDark() {
+        this.isDark = !this.isDark
+      }
     },
   }
 </script>

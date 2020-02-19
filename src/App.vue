@@ -1,19 +1,19 @@
 <template>
   <v-app>
     <v-content>
-      <Index/>
+      <Metronome/>
     </v-content>
   </v-app>
 </template>
 
 <script>
-import Index from './components/Index';
+import Metronome from './components/Metronome';
 
 export default {
   name: 'App',
 
   components: {
-    Index,
+    Metronome,
   },
 
   data: () => ({
